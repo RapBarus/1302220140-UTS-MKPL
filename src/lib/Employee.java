@@ -35,13 +35,16 @@ public class Employee {
     }
 
     public int calculateAnnualTax() {
-        return TaxFunction.calculateTax(
-            employmentInfo.getSalary().getBaseSalary(),
-            employmentInfo.getSalary().getAdditionalIncome(),
-            employmentInfo.getMonthsWorkedThisYear(),
-            employmentInfo.getAnnualDeductible(),
-            familyInfo.hasSpouse(),
-            familyInfo.getNumberOfChildren()
-        );
+    TaxableIncomeProfile profile = new TaxableIncomeProfile(
+        employmentInfo.getSalary().getBaseSalary(),
+        employmentInfo.getSalary().getAdditionalIncome(),
+        employmentInfo.getMonthsWorkedThisYear(),
+        employmentInfo.getAnnualDeductible(),
+        familyInfo.hasSpouse(),
+        familyInfo.getNumberOfChildren()
+    );
+
+        return TaxFunction.calculateTax(profile);
     }
+
 }
