@@ -3,16 +3,23 @@ package lib;
 public class TaxFunction {
 
     public static int calculateTax(TaxableIncomeProfile profile) {
-    int taxableIncome = ((profile.getMonthlySalary() + profile.getOtherMonthlyIncome()) * profile.getMonthsWorked()) 
-                        - profile.getDeductible();
+        int taxableIncome = calculateTaxableIncome(profile);
+        int nonTaxableIncome = calculateNonTaxableIncome(profile);
+        int rawTax = (int) Math.round(0.05 * (taxableIncome - nonTaxableIncome));
+        return Math.max(rawTax, 0);
+    }
 
-    int nonTaxable = 54000000;
-    if (profile.isMarried()) nonTaxable += 4500000;
-    nonTaxable += 4500000 * profile.getNumberOfChildren();
+    private static int calculateTaxableIncome(TaxableIncomeProfile profile) {
+        return ((profile.getMonthlySalary() + profile.getOtherMonthlyIncome()) * profile.getMonthsWorked())
+                - profile.getDeductible();
+    }
 
-    int result = (int) Math.round(0.05 * (taxableIncome - nonTaxable));
-    return Math.max(result, 0);
-	}
+    private static int calculateNonTaxableIncome(TaxableIncomeProfile profile) {
+        int nonTaxable = 54000000;
+        if (profile.isMarried()) nonTaxable += 4500000;
+        nonTaxable += 4500000 * Math.min(profile.getNumberOfChildren(), 3);
+        return nonTaxable;
+    }
 
 }
 
